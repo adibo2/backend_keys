@@ -1,0 +1,20 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: adib
+      POSTGRES_PASSWORD: adibo
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - db
+    restart: unless-stopped
+
+networks:
+  db:
+    driver: bridge
+volumes:
+  db:
