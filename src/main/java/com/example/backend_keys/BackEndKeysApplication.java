@@ -21,7 +21,7 @@ public class BackEndKeysApplication {
     @Bean
     CommandLineRunner runner(CustomerRepisotory customerRepisotory) {
         return args -> {
-            generateRandomStudents(customerRepisotory);
+            generateRandomCustomers(customerRepisotory);
             customerRepisotory.findById(2).ifPresentOrElse(System.out::println,()->{
                 System.out.println("customer 3 not founr");
             });
@@ -30,7 +30,7 @@ public class BackEndKeysApplication {
         };
     }
 
-    private void generateRandomStudents(CustomerRepisotory customerRepisotory) {
+    private void generateRandomCustomers(CustomerRepisotory customerRepisotory) {
         Faker faker = new Faker();
         for (int i = 0; i < 10; i++) {
             String name = faker.name().firstName();

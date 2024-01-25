@@ -26,7 +26,7 @@ public class Customer {
                 strategy = GenerationType.SEQUENCE,
                 generator = "customer_id_sequence"
         )
-        @Column(name = "customer_id")
+        @Column(name = "id")
 
         private Integer id;
     @Column(nullable = false)
@@ -50,6 +50,10 @@ public class Customer {
 
     public Customer() {
 
+    }
+
+    public Cart getCart() {
+        return cart;
     }
 
     public Customer(int id, String name, String email, int age) {

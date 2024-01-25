@@ -18,7 +18,7 @@ public class Product {
             strategy = GenerationType.SEQUENCE,
             generator = "Product_id_sequence"
     )
-    @Column(name = "product_id")
+    @Column(name = "id")
     private Integer id;
 
     @Column(nullable = false)
@@ -45,7 +45,7 @@ public class Product {
     private Integer stock;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private double price;
 
     @Column(nullable = false)
     private Integer Discount;
@@ -54,7 +54,7 @@ public class Product {
     @JoinColumn(
             name = "cart_id",
             nullable = false,
-            referencedColumnName = "cart_id",
+            referencedColumnName = "id",
             foreignKey = @ForeignKey(
                     name = "cart_product_fk"
             )
@@ -64,7 +64,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Integer id, String name, String slug, String image, String alt, String meta, Integer stock, BigDecimal price, Integer discount) {
+    public Product(Integer id, String name, String slug, String image, String alt, String meta, Integer stock, double price, Integer discount) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -76,7 +76,7 @@ public class Product {
         Discount = discount;
     }
 
-    public Product(String name, String slug, String image, String alt, String meta, Integer stock, BigDecimal price, Integer discount) {
+    public Product(String name, String slug, String image, String alt, String meta, Integer stock, double price, Integer discount) {
         this.name = name;
         this.slug = slug;
         Image = image;
@@ -145,11 +145,11 @@ public class Product {
         this.stock = stock;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
