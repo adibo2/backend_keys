@@ -87,11 +87,25 @@ public class CartService implements CartDao{
         cart.setCustomer(customer);
 
         return cartRepo.save(cart);
-
     }
 
     @Override
     public Cart deleteItemFromCart(Product product, Customer customer) {
+        Cart cart = customer.getCart();
+        List<Cartitem> cartitems=cart.getCartitemList();
+        Cartitem item=findCartitems(cartitems,product.getId());
+        cartitems.remove(item);
+        cartitemRepo.delete(item);
+        int totalitems=totalItems(cartitems);
+        double totalPrice=totalPrice(cartitems);
+
+        cart.setCartitemList(cartitems);
+        cart.setTotalPrice(totalPrice);
+        cart.setTotalProduct(totalitems);
+        cartRepo.save(cart);
+
+
+
         return null;
     }
 }

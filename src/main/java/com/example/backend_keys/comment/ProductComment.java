@@ -48,6 +48,86 @@ public class ProductComment {
             name = "customer_comment_fk"))
     private Customer customer;
 
+
+
     public ProductComment() {
+    }
+
+    public ProductComment( Product product, String title, String body, int rating, Date createDate, Customer customer) {
+        this.product = product;
+        this.title = title;
+        this.body = body;
+        this.rating = rating;
+        this.createDate = createDate;
+        this.customer = customer;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductComment{" +
+                "id=" + id +
+                ", product=" + product +
+                ", title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                ", rating=" + rating +
+                ", createDate=" + createDate +
+                ", customer=" + customer +
+                '}';
     }
 }
