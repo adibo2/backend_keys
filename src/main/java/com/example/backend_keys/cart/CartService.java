@@ -9,18 +9,21 @@ import com.example.backend_keys.product.Product;
 import com.example.backend_keys.product.ProductRepisotory;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CartService implements CartDao{
     private CartRepo cartRepo;
+    private final CustomCartDtoMapper customCartDtoMapper;
 
     private CartItemRepo cartitemRepo;
 
-    private ProductRepisotory productRepisotory
+    private ProductRepisotory productRepisotory;
 
-    public CartService(CartRepo cartRepo, CartItemRepo cartitemRepo,ProductRepisotory productRepisotory) {
+    public CartService(CartRepo cartRepo, CartItemRepo cartitemRepo,ProductRepisotory productRepisotory,CustomCartDtoMapper customCartDtoMapper) {
         this.cartRepo = cartRepo;
         this.cartitemRepo = cartitemRepo;
         this.productRepisotory=productRepisotory;
+        this.customCartDtoMapper=customCartDtoMapper;
     }
 
     private Cartitem findCartitems(List<Cartitem> cartitems, Integer productId){
@@ -50,7 +53,7 @@ public class CartService implements CartDao{
                 .orElseThrow(()->new RessourceNotFound("customer with id %s".formatted(cartId)));
 
         Product product=productRepisotory.findById(productId)
-                .orElseThrow(()->new RessourceNotFound("customer with id %s".formatted(cartId)));
+                .orElseThrow(()->new RessourceNotFound("customer with id %s".formatted(productId)));
         Cartitem cartitem=cartitemRepo.findCartItemByProductIdAndCartId(cartId,productId);
 
 
@@ -102,8 +105,32 @@ public class CartService implements CartDao{
         cart.setTotalProduct(totalitems);
         cartRepo.save(cart);
 
-
-
         return null;
+    }
+
+    @Override
+    public CartDto getCart(Integer id) {
+        return cartRepo.findCartById(id).map(customCartDtoMapper)
+                .orElseThrow(() -> new RessourceNotFound(
+                        "cart with id [%s] not found".formatted(id)
+                ));
+    }
+
+    @Override
+    public void updateProductInCarts(Integer cartId, Integer productId,int quantity) {
+        Cart cart=cartRepo.findById(cartId).orElseThrow(()->(
+                new RessourceNotFound( "cart with id [%s] not found".formatted(cartId))
+                ));
+        Product product=productRepisotory.findById(productId)
+                .orElseThrow(()->new RessourceNotFound("customer with id %s".formatted(productId)));
+
+        Cartitem cartitem=cartitemRepo.findCartItemByProductIdAndCartId(cartId,productId);
+
+        if(cartitem == null){
+            throw new ApiException("Product " + product.getName() + " not available in the cart!!!");
+        }
+        cartitem.setQuantity(quantity);
+        cart.setTotalPrice(cart.getTotalPrice() + (cart.getTotalPrice() * quantity));
+
     }
 }

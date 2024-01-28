@@ -98,7 +98,7 @@ public class Cart {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cart cart = (Cart) o;
-        return totalProduct == cart.totalProduct && Objects.equals(id, cart.id) && Objects.equals(totalPrice, cart.totalPrice) && Objects.equals(name, cart.name) && Objects.equals(customer, cart.customer) && Objects.equals(cartitemList, cart.cartitemList);
+        return totalProduct == cart.totalProduct && Objects.equals(id, cart.id) && Objects.equals(totalPrice, cart.totalPrice) && Objects.equals(customer, cart.customer) && Objects.equals(cartitemList, cart.cartitemList);
     }
 
     @Override
