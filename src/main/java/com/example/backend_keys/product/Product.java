@@ -1,9 +1,11 @@
 package com.example.backend_keys.product;
 
 import com.example.backend_keys.cart.Cart;
+import com.example.backend_keys.cartitems.Cartitem;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity(name = "product")
 @Table(name = "product", uniqueConstraints = {
@@ -55,16 +57,24 @@ public class Product {
     @Column(nullable = false)
     private Integer Discount;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(
-            name = "cart_id",
+            name = "cart_items_id",
             nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(
-                    name = "cart_product_fk"
+                    name = "cartitem_product_fk"
             )
     )
-    private Cart cart;
+    private Cartitem cartitem;
+
+    public Cartitem getCartitem() {
+        return cartitem;
+    }
+
+    public void setCartitem(Cartitem cartitem) {
+        this.cartitem = cartitem;
+    }
 
     public Product() {
     }
@@ -107,6 +117,9 @@ public class Product {
     public void setName(String name) {
         this.name = name;
     }
+
+
+
 
     public String getSlug() {
         return slug;

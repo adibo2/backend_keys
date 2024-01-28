@@ -45,7 +45,8 @@ public class Customer {
 
     @OneToOne(
             mappedBy = "customer",
-            cascade = {CascadeType.REMOVE,CascadeType.PERSIST}
+            cascade = {CascadeType.REMOVE,CascadeType.PERSIST},
+            orphanRemoval = true
     )
     private Cart cart;
 

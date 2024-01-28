@@ -31,8 +31,6 @@ public class Cart {
     @Column(nullable = false)
     private Double totalPrice ;
 
-    @Column(nullable = false)
-    private String name;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id",referencedColumnName = "id"
@@ -66,13 +64,7 @@ public class Cart {
         this.totalPrice = totalPrice;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Customer getCustomer() {
         return customer;
@@ -96,7 +88,6 @@ public class Cart {
                 "id=" + id +
                 ", totalProduct=" + totalProduct +
                 ", totalPrice=" + totalPrice +
-                ", name='" + name + '\'' +
                 ", customer=" + customer +
                 ", cartitemList=" + cartitemList +
                 '}';
@@ -112,6 +103,6 @@ public class Cart {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, totalProduct, totalPrice, name, customer, cartitemList);
+        return Objects.hash(id, totalProduct, totalPrice, customer, cartitemList);
     }
 }

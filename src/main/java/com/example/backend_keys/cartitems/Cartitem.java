@@ -20,15 +20,18 @@ public class Cartitem {
     private Integer id;
 
     @Column
-    private double totalPrice;
+    private double productPrice;
 
     private int quantity;
+
+    private double discount;
+
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name="Cart_id",referencedColumnName = "id")
     private Cart cart;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
 
@@ -40,16 +43,24 @@ public class Cartitem {
         this.id = id;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public double getProductPrice() {
+        return productPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setProductPrice(double productPrice) {
+        this.productPrice = productPrice;
     }
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 
     public void setQuantity(int quantity) {
