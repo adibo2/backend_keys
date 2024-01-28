@@ -17,7 +17,7 @@ public record ProductRegistrationRequest (
 
      Integer stock,
 
-     BigDecimal price,
+     double price,
 
      Integer Discount
       ){}

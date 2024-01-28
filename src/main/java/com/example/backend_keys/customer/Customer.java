@@ -1,8 +1,10 @@
 package com.example.backend_keys.customer;
 
 import com.example.backend_keys.cart.Cart;
+import com.example.backend_keys.order.Order;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -47,6 +49,20 @@ public class Customer {
     )
     private Cart cart;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orders;
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
     public Customer() {
 

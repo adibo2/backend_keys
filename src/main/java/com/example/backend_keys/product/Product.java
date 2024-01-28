@@ -6,7 +6,12 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity(name = "product")
-@Table(name = "product")
+@Table(name = "product", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "product_name_unique",
+                columnNames = "name"
+        ),
+})
 public class Product {
     @Id
     //it like auto increment
