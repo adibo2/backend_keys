@@ -4,8 +4,8 @@ import com.example.backend_keys.order.Order;
 import com.example.backend_keys.product.Product;
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "order_detail")
+@Entity(name = "orderDetail")
+@Table(name = "orderDetail")
 public class OrderDetail {
     @Id
     //it like auto increment
