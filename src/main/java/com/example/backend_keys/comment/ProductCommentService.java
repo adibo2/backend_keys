@@ -13,6 +13,7 @@ public class ProductCommentService implements ProductCommentDao {
     @Override
     public ProductComment addReviews(ProductCommentDto productCommentDto) {
         ProductComment productComment=new ProductComment();
+        productComment.setId(productCommentDto.id());
         productComment.setBody(productCommentDto.body());
         productComment.setProduct(productCommentDto.product());
         productComment.setCustomer(productCommentDto.customer());

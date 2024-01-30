@@ -91,6 +91,12 @@ public class Product {
         Discount = discount;
     }
 
+    public Product(String name, String slug, String image) {
+        this.name = name;
+        this.slug = slug;
+        Image = image;
+    }
+
     public Product(String name, String slug, String image, String alt, String meta, Integer stock, double price, Integer discount) {
         this.name = name;
         this.slug = slug;

@@ -12,12 +12,12 @@ import java.util.Date;
 public class ProductComment {
     @Id
     @SequenceGenerator(
-            name = "product_id_sequence",
-            sequenceName = "product_id_sequence"
+            name = "product_comment_id_sequence",
+            sequenceName = "product_comment_id_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "product_id_sequence"
+            generator = "product_comment_id_sequence"
     )
     @Column(name = "id")
     private Integer id;
