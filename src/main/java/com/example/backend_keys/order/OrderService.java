@@ -68,4 +68,31 @@ public class OrderService implements OrderDao{
         }
         return orders;
     }
+    @Override
+    public List<OrderDTO> getOrdersByUser(String emailId) {
+        List<Order> orders = orderRepo.findAllByEmail(emailId);
+
+        List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class))
+                .collect(Collectors.toList());
+
+        if (orderDTOs.size() == 0) {
+            throw new APIException("No orders placed yet by the user with email: " + emailId);
+        }
+
+        return orderDTOs;
+    }
+
+    @Override
+    public OrderDTO getOrder(String emailId, Long orderId) {
+
+        Order order = orderRepo.findOrderByEmailAndOrderId(emailId, orderId);
+
+        if (order == null) {
+            throw new ResourceNotFoundException("Order", "orderId", orderId);
+        }
+
+        return modelMapper.map(order, OrderDTO.class);
+    }
+
+
 }
