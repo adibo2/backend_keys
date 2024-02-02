@@ -35,6 +35,16 @@ public class OrderDetail {
     ))
     private Product product;
 
+    @Column
+    private double discount;
+
+    @Column
+    private Integer quantity;
+
+    @Column
+    private double orderedProductPrice;
+
+
     public Integer getId() {
         return id;
     }
@@ -45,6 +55,30 @@ public class OrderDetail {
 
     public Order getOrder() {
         return order;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getOrderedProductPrice() {
+        return orderedProductPrice;
+    }
+
+    public void setOrderedProductPrice(double orderedProductPrice) {
+        this.orderedProductPrice = orderedProductPrice;
     }
 
     public void setOrder(Order order) {

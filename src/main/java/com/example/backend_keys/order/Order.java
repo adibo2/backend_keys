@@ -4,6 +4,7 @@ import com.example.backend_keys.customer.Customer;
 import com.example.backend_keys.orderDetail.OrderDetail;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class Order {
     private Integer id;
 
     @Column(name = "orderDate")
-    private Date orderDate;
+    private LocalDateTime orderDate;
 
     @Column
     private double totalPrice;
@@ -33,12 +34,8 @@ public class Order {
     @Column
     private String orderStatus;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id",nullable = false,referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "customer_id_fk"
-            ))
-    private Customer customer;
+    @Column(nullable = false)
+    private String email;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "order")
     private List<OrderDetail> orderDetails;
@@ -51,11 +48,11 @@ public class Order {
         this.id = id;
     }
 
-    public Date getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -75,12 +72,12 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<OrderDetail> getOrderDetails() {
