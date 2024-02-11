@@ -24,12 +24,15 @@ public class OrderService implements OrderDao{
     private OrderDetailRepo orderDetailRepo;
     private CartRepo cartRepo;
 
+    private OrderDtoMapper orderDtoMapper;
+
     public OrderService(OrderRepo orderRepo,CustomerRepisotory customerRepisotory,
-                        OrderDetailRepo orderDetailRepo,CartRepo cartRepo) {
+                        OrderDetailRepo orderDetailRepo,CartRepo cartRepo,OrderDtoMapper orderDtoMapper) {
         this.orderRepo = orderRepo;
         this.customerRepisotory=customerRepisotory;
         this.orderDetailRepo=orderDetailRepo;
         this.cartRepo=cartRepo;
+        this.orderDtoMapper=orderDtoMapper;
 
     }
 
@@ -65,12 +68,14 @@ public class OrderService implements OrderDao{
         cart.getCartitemList().forEach(el->{
             int quantity= el.getQuantity();
             Product product=el.getProduct();
-        });
 
+        });
+        OrderDto orderDto=orderDtoMapper.apply(savedOrder);
+
+        return orderDto;
 
         //delete cartt id
 
-        return orderRepo.save(order);
     }
     @Override
     public List<Order> findAll(String username) {
@@ -85,7 +90,17 @@ public class OrderService implements OrderDao{
     }
 
     @Override
-    public List<Order> getOrderByUser(String Id) {
+    public List<OrderDto> getOrdersByUser(String email) {
+        return null;
+    }
+
+    @Override
+    public OrderDto getOrder(String email, Integer orderId) {
+        return null;
+    }
+
+    @Override
+    public List<OrderDto> getOrderByUser(String Id) {
         List<Order> orders=orderRepo.findAllById(Id);
 
         if(orders.size() ==0){

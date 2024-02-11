@@ -10,7 +10,7 @@ public interface CartDao {
 
     Cart addtoCart(Integer cartId, Integer productId, int quantity);
 
-    Cart deleteItemFromCart(Product product, Customer customer);
+    String deleteProductFromCart(Product product, Customer customer);
 
     CartDto getCart(Integer id);
 

@@ -40,6 +40,18 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "order")
     private List<OrderDetail> orderDetails;
 
+    public Order() {
+    }
+
+    public Order(Integer id, LocalDateTime orderDate, double totalPrice, String orderStatus, String email, List<OrderDetail> orderDetails) {
+        this.id = id;
+        this.orderDate = orderDate;
+        this.totalPrice = totalPrice;
+        this.orderStatus = orderStatus;
+        this.email = email;
+        this.orderDetails = orderDetails;
+    }
+
     public Integer getId() {
         return id;
     }

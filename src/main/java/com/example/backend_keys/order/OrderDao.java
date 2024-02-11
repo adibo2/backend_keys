@@ -7,9 +7,11 @@ import java.util.List;
 public interface OrderDao {
     OrderDto save(Integer cartId,String email);
 
-    List<Order> findAll(String username);
+    List<OrderDto> findAll(String username);
 
     void cancelOrder(Integer Id);
 
-    List<Order> getOrderByUser(String Id);
+    List<OrderDto> getOrdersByUser(String email);
+
+    OrderDto getOrder(String email,Integer orderId);
 }

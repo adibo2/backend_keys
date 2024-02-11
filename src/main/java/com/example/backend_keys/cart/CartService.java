@@ -91,7 +91,7 @@ public class CartService implements CartDao{
     }
 
     @Override
-    public Cart deleteItemFromCart(Product product, Customer customer) {
+    public String deleteItemFromCart(Product product, Customer customer) {
         Cart cart = customer.getCart();
         List<Cartitem> cartitems=cart.getCartitemList();
         Cartitem item=findCartitems(cartitems,product.getId());
@@ -182,7 +182,7 @@ public class CartService implements CartDao{
     @Override
     public String deleteProductFromCart(Long cartId, Long productId) {
         Cart cart = cartRepo.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
+                .orElseThrow(() -> new RessourceNotFound("Cart", "cartId", cartId));
 
         CartItem cartItem = cartItemRepo.findCartItemByProductIdAndCartId(cartId, productId);
 
