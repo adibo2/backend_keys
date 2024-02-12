@@ -31,7 +31,7 @@ public class Cartitem {
     @JoinColumn(name="Cart_id",referencedColumnName = "id")
     private Cart cart;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
 

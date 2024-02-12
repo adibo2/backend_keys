@@ -57,7 +57,7 @@ public class Product {
     @Column(nullable = false)
     private Integer Discount;
 
-    @OneToOne
+    @OneToMany
     @JoinColumn(
             name = "cart_items_id",
             nullable = false,
@@ -66,20 +66,14 @@ public class Product {
                     name = "cartitem_product_fk"
             )
     )
-    private Cartitem cartitem;
+    private List<Cartitem> cartitems;
 
-    public Cartitem getCartitem() {
-        return cartitem;
-    }
 
-    public void setCartitem(Cartitem cartitem) {
-        this.cartitem = cartitem;
-    }
 
     public Product() {
     }
 
-    public Product(Integer id, String name, String slug, String image, String alt, String meta, Integer stock, double price, Integer discount) {
+    public Product(Integer id, String name, String slug, String image, String alt, String meta, Integer stock, double price, Integer discount, List<Cartitem> cartitems) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -89,6 +83,7 @@ public class Product {
         this.stock = stock;
         this.price = price;
         Discount = discount;
+        this.cartitems = cartitems;
     }
 
     public Product(String name, String slug, String image) {
@@ -106,6 +101,14 @@ public class Product {
         this.stock = stock;
         this.price = price;
         Discount = discount;
+    }
+
+    public List<Cartitem> getCartitems() {
+        return cartitems;
+    }
+
+    public void setCartitems(List<Cartitem> cartitems) {
+        this.cartitems = cartitems;
     }
 
     public Integer getId() {

@@ -2,6 +2,7 @@ package com.example.backend_keys.order;
 
 import com.example.backend_keys.cart.Cart;
 import com.example.backend_keys.cart.CartRepo;
+import com.example.backend_keys.cart.CartService;
 import com.example.backend_keys.cartitems.Cartitem;
 import com.example.backend_keys.customer.Customer;
 import com.example.backend_keys.customer.CustomerRepisotory;
@@ -26,13 +27,16 @@ public class OrderService implements OrderDao{
 
     private OrderDtoMapper orderDtoMapper;
 
-    public OrderService(OrderRepo orderRepo,CustomerRepisotory customerRepisotory,
+    private CartService cartService;
+
+    public OrderService(OrderRepo orderRepo,CustomerRepisotory customerRepisotory,CartService cartService,
                         OrderDetailRepo orderDetailRepo,CartRepo cartRepo,OrderDtoMapper orderDtoMapper) {
         this.orderRepo = orderRepo;
         this.customerRepisotory=customerRepisotory;
         this.orderDetailRepo=orderDetailRepo;
         this.cartRepo=cartRepo;
         this.orderDtoMapper=orderDtoMapper;
+        this.cartService=cartService;
 
     }
 
@@ -68,6 +72,9 @@ public class OrderService implements OrderDao{
         cart.getCartitemList().forEach(el->{
             int quantity= el.getQuantity();
             Product product=el.getProduct();
+            cartService.deleteProductFromCart(cartId,product.getId());
+            product.setStock(product.getStock() - quantity);
+
 
         });
         OrderDto orderDto=orderDtoMapper.apply(savedOrder);
@@ -77,12 +84,7 @@ public class OrderService implements OrderDao{
         //delete cartt id
 
     }
-    @Override
-    public List<Order> findAll(String username) {
-        Customer customerName=customerRepisotory.findAllByName(username);
-        List<Order> orders=customerName.getOrders();
-        return  orders;
-    }
+
 
     @Override
     public void cancelOrder(Integer Id) {
