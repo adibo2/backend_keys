@@ -7,17 +7,19 @@ import com.example.backend_keys.exception.ApiException;
 import com.example.backend_keys.exception.RessourceNotFound;
 import com.example.backend_keys.product.Product;
 import com.example.backend_keys.product.ProductRepisotory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CartService implements CartDao{
-    private CartRepo cartRepo;
+    private final CartRepo cartRepo;
     private final CustomCartDtoMapper customCartDtoMapper;
 
-    private CartItemRepo cartitemRepo;
+    private final CartItemRepo cartitemRepo;
 
-    private ProductRepisotory productRepisotory;
+    private final ProductRepisotory productRepisotory;
+
 
     public CartService(CartRepo cartRepo, CartItemRepo cartitemRepo,ProductRepisotory productRepisotory,CustomCartDtoMapper customCartDtoMapper) {
         this.cartRepo = cartRepo;
@@ -68,7 +70,6 @@ public class CartService implements CartDao{
 
         List<Cartitem> cartItems = cart.getCartitemList();
 
-
         if(cartitem !=null){
             cartitem.setQuantity(cartitem.getQuantity()+quantity);
             cartitemRepo.save(cartitem);
@@ -90,23 +91,6 @@ public class CartService implements CartDao{
         return cartRepo.save(cart);
     }
 
-    @Override
-    public String deleteItemFromCart(Product product, Customer customer) {
-        Cart cart = customer.getCart();
-        List<Cartitem> cartitems=cart.getCartitemList();
-        Cartitem item=findCartitems(cartitems,product.getId());
-        cartitems.remove(item);
-        cartitemRepo.delete(item);
-        int totalitems=totalItems(cartitems);
-        //double totalPrice=totalPrice(cartitems);
-
-        cart.setCartitemList(cartitems);
-        //cart.setTotalPrice(totalPrice);
-        cart.setTotalProduct(totalitems);
-        cartRepo.save(cart);
-
-        return null;
-    }
 
     @Override
     public CartDto getCart(Integer id) {
@@ -133,8 +117,6 @@ public class CartService implements CartDao{
         cart.setTotalPrice(cart.getTotalPrice() + (cart.getTotalPrice() * quantity));
 
     }
-
-
     @Override
     public String deleteProductFromCart(Integer cartId, Integer productId) {
         Cart cart = cartRepo.findById(cartId)

@@ -91,25 +91,14 @@ public class OrderService implements OrderDao{
 
     }
 
-    @Override
-    public List<OrderDto> getOrdersByUser(String email) {
-        return null;
-    }
+
 
     @Override
     public OrderDto getOrder(String email, Integer orderId) {
         return null;
     }
 
-    @Override
-    public List<OrderDto> getOrderByUser(String Id) {
-        List<Order> orders=orderRepo.findAllById(Id);
 
-        if(orders.size() ==0){
-            throw  new ApiException("No orders placed yet by the user with email: " + Id);
-        }
-        return orders;
-    }
 
 
 

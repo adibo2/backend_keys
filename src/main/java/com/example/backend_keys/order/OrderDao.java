@@ -10,7 +10,6 @@ public interface OrderDao {
 
     void cancelOrder(Integer Id);
 
-    List<OrderDto> getOrdersByUser(String email);
 
     OrderDto getOrder(String email,Integer orderId);
 }
