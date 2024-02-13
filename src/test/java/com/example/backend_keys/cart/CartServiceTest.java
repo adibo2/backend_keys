@@ -7,9 +7,12 @@ import com.example.backend_keys.product.ProductRepisotory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -18,7 +21,7 @@ import static org.mockito.Mockito.when;
 class CartServiceTest {
 
     @Mock
-    private CartRepo cartRepo;
+    private CartRepository cartRepository;
 
     @Mock
     private CartItemRepo cartItemRepo;
@@ -32,51 +35,56 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest =new CartService(cartRepo,cartItemRepo,productRepisotory,customCartDtoMapper);
+        MockitoAnnotations.initMocks(this);
+        underTest =new CartService(cartRepository,cartItemRepo,productRepisotory,customCartDtoMapper);
 
 
     }
 
+
+
     @Test
-    void itShouldDeleteItemFromCart() {
+    void itShouldDeleteProductFromCart() {
         // Given
         Integer cartId = 1;
         Integer productId = 1;
         double productPrice = 100.0;
         int quantity = 2;
-        double initialTotalPrice = 200.0;
-        int initialTotalProduct = 2;
-        int initialStock = 5;
+        String productName = "Test Product";
+
+        // Initial state of the cart
+        double initialTotalPrice = 500.0; 
+        //cart initaly 3ando 5 products
+        int initialTotalProduct = 5; // Assume the cart initially has 5 products
 
         Cart cart = new Cart();
-        cart.setId(cartId);
         cart.setTotalPrice(initialTotalPrice);
         cart.setTotalProduct(initialTotalProduct);
 
         Product product = new Product();
-        product.setName("Test Product");
-        product.setStock(initialStock);
+        product.setName(productName);
 
         Cartitem cartItem = new Cartitem();
         cartItem.setProductPrice(productPrice);
         cartItem.setQuantity(quantity);
         cartItem.setProduct(product);
 
-        when(cartRepo.findById(cartId)).thenReturn(Optional.of(cart));
-
+        when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
         when(cartItemRepo.findCartItemByProductIdAndCartId(cartId, productId)).thenReturn(cartItem);
 
         // When
-        String response = underTest.deleteProductFromCart(cartId, productId);
+        String result = underTest.deleteProductFromCart(cartId, productId);
 
         // Then
-        String expectedMessage = "Product " + product.getName() + " removed from the cart !!!";
-        assertEquals(expectedMessage, response);
+        assertEquals("Product " + productName + " removed from the cart !!!", result);
         verify(cartItemRepo).deleteCartItemByProductIdAndCartId(cartId, productId);
+
+        // The total price and total product count should decrease by the amount related to the removed product
         assertEquals(initialTotalPrice - (productPrice * quantity), cart.getTotalPrice());
         assertEquals(initialTotalProduct - quantity, cart.getTotalProduct());
-        assertEquals(initialStock + quantity, product.getStock());
     }
+
+
 
 
 
@@ -98,7 +106,7 @@ class CartServiceTest {
         product.setStock(10);
         product.setDiscount(0);
 
-        when(cartRepo.findById(cartId)).thenReturn(Optional.of(cart));
+        when(cartRepository.findById(cartId)).thenReturn(Optional.of(cart));
         when(productRepisotory.findById(productId)).thenReturn(Optional.of(product));
 
         // When

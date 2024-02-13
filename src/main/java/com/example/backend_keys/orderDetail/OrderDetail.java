@@ -10,12 +10,12 @@ public class OrderDetail {
     @Id
     //it like auto increment
     @SequenceGenerator(
-            name = "product_id_sequence",
-            sequenceName = "product_id_sequence"
+            name = "orderDetail_id_sequence",
+            sequenceName = "orderDetail_id_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "Product_id_sequence"
+            generator = "orderDetail_id_sequence"
     )
     @Column(name = "id")
     private Integer id;

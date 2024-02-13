@@ -2,18 +2,19 @@ package com.example.backend_keys.cart;
 
 import com.example.backend_keys.cartitems.CartItemRepo;
 import com.example.backend_keys.cartitems.Cartitem;
-import com.example.backend_keys.customer.Customer;
 import com.example.backend_keys.exception.ApiException;
 import com.example.backend_keys.exception.RessourceNotFound;
 import com.example.backend_keys.product.Product;
 import com.example.backend_keys.product.ProductRepisotory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Service
 public class CartService implements CartDao{
-    private final CartRepo cartRepo;
+
+    private final CartRepository cartRepository;
     private final CustomCartDtoMapper customCartDtoMapper;
 
     private final CartItemRepo cartitemRepo;
@@ -21,8 +22,10 @@ public class CartService implements CartDao{
     private final ProductRepisotory productRepisotory;
 
 
-    public CartService(CartRepo cartRepo, CartItemRepo cartitemRepo,ProductRepisotory productRepisotory,CustomCartDtoMapper customCartDtoMapper) {
-        this.cartRepo = cartRepo;
+    @Autowired
+    public CartService(CartRepository cartRepository, CartItemRepo cartitemRepo,
+                       ProductRepisotory productRepisotory, CustomCartDtoMapper customCartDtoMapper) {
+        this.cartRepository = cartRepository;
         this.cartitemRepo = cartitemRepo;
         this.productRepisotory=productRepisotory;
         this.customCartDtoMapper=customCartDtoMapper;
@@ -51,7 +54,7 @@ public class CartService implements CartDao{
 
     @Override
     public Cart addtoCart(Integer cartId, Integer productId, int quantity) {
-        Cart cart=cartRepo.findById(cartId)
+        Cart cart= cartRepository.findById(cartId)
                 .orElseThrow(()->new RessourceNotFound("customer with id %s".formatted(cartId)));
 
         Product product=productRepisotory.findById(productId)
@@ -88,13 +91,13 @@ public class CartService implements CartDao{
         cart.setTotalPrice(cart.getTotalPrice() + (product.getPrice() * quantity));
         cart.setTotalProduct(totalitems);
 
-        return cartRepo.save(cart);
+        return cartRepository.save(cart);
     }
 
 
     @Override
     public CartDto getCart(Integer id) {
-        return cartRepo.findCartById(id).map(customCartDtoMapper)
+        return cartRepository.findCartById(id).map(customCartDtoMapper)
                 .orElseThrow(() -> new RessourceNotFound(
                         "cart with id [%s] not found".formatted(id)
                 ));
@@ -102,7 +105,7 @@ public class CartService implements CartDao{
 
     @Override
     public void updateProductInCarts(Integer cartId, Integer productId,int quantity) {
-        Cart cart=cartRepo.findById(cartId).orElseThrow(()->(
+        Cart cart= cartRepository.findById(cartId).orElseThrow(()->(
                 new RessourceNotFound( "cart with id [%s] not found".formatted(cartId))
                 ));
         Product product=productRepisotory.findById(productId)
@@ -117,9 +120,12 @@ public class CartService implements CartDao{
         cart.setTotalPrice(cart.getTotalPrice() + (cart.getTotalPrice() * quantity));
 
     }
+
+
+
     @Override
     public String deleteProductFromCart(Integer cartId, Integer productId) {
-        Cart cart = cartRepo.findById(cartId)
+        Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new RessourceNotFound("customer with email %s".formatted(productId)));
 
         Cartitem cartItem = cartitemRepo.findCartItemByProductIdAndCartId(cartId, productId);
@@ -133,7 +139,6 @@ public class CartService implements CartDao{
         cart.setTotalProduct(cart.getTotalProduct() - cartItem.getQuantity());
 
         Product product = cartItem.getProduct();
-        product.setStock(product.getStock() + cartItem.getQuantity());
         cartitemRepo.deleteCartItemByProductIdAndCartId(cartId,productId);
         return "Product " + cartItem.getProduct().getName() + " removed from the cart !!!";
 

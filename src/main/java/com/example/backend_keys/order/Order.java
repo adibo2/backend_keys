@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-@Entity(name = "order")
-@Table(name = "order")
+@Entity(name = "orders")
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -39,6 +39,12 @@ public class Order {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "order")
     private List<OrderDetail> orderDetails;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id",referencedColumnName = "id", foreignKey = @ForeignKey(
+            name = "customer_id_fk"
+    ))
+    private Customer customer;
 
     public Order() {
     }

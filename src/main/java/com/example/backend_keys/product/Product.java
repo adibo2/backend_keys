@@ -39,9 +39,7 @@ public class Product {
     )
     private String Image;
 
-    @Column(nullable = false)
 
-    private String alt;
 
 
     @Column(nullable = false)
@@ -57,20 +55,17 @@ public class Product {
     @Column(nullable = false)
     private Integer Discount;
 
-    @OneToMany
-    @JoinColumn(
-            name = "cart_items_id",
-            nullable = false,
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "cartitem_product_fk"
-            )
-    )
+    @OneToMany(mappedBy = "product")
     private List<Cartitem> cartitems;
 
 
 
     public Product() {
+    }
+    public Product(String name, String slug, String image) {
+        this.name = name;
+        this.slug = slug;
+        Image = image;
     }
 
     public Product(Integer id, String name, String slug, String image, String alt, String meta, Integer stock, double price, Integer discount, List<Cartitem> cartitems) {
@@ -78,7 +73,6 @@ public class Product {
         this.name = name;
         this.slug = slug;
         Image = image;
-        this.alt = alt;
         this.meta = meta;
         this.stock = stock;
         this.price = price;
@@ -86,17 +80,12 @@ public class Product {
         this.cartitems = cartitems;
     }
 
-    public Product(String name, String slug, String image) {
-        this.name = name;
-        this.slug = slug;
-        Image = image;
-    }
+
 
     public Product(String name, String slug, String image, String alt, String meta, Integer stock, double price, Integer discount) {
         this.name = name;
         this.slug = slug;
         Image = image;
-        this.alt = alt;
         this.meta = meta;
         this.stock = stock;
         this.price = price;
@@ -145,16 +134,6 @@ public class Product {
     public void setImage(String image) {
         Image = image;
     }
-
-    public String getAlt() {
-        return alt;
-    }
-
-    public void setAlt(String alt) {
-        this.alt = alt;
-    }
-
-
 
     public String getMeta() {
         return meta;

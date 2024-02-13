@@ -2,6 +2,7 @@ package com.example.backend_keys.cart;
 
 import com.example.backend_keys.cartitems.Cartitem;
 import com.example.backend_keys.customer.Customer;
+import com.example.backend_keys.orderDetail.OrderDetail;
 import com.example.backend_keys.product.Product;
 import jakarta.persistence.*;
 
@@ -9,18 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Entity
-@Table(name = "Cart")
+@Entity(name = "cart")
+@Table(name = "cart")
 public class Cart {
     @Id
     //it like auto increment
     @SequenceGenerator(
-            name = "customer_id_sequence",
-            sequenceName = "customer_id_sequence"
+            name = "cart_id_sequence",
+            sequenceName = "cart_id_sequence"
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "customer_id_sequence"
+            generator = "cart_id_sequence"
     )
     @Column(name = "id")
     private Integer id;
@@ -39,6 +40,25 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<Cartitem> cartitemList;
+
+
+
+    public Cart() {
+    }
+
+    public Cart(int totalProduct, Double totalPrice, Customer customer, List<Cartitem> cartitemList) {
+        this.totalProduct = totalProduct;
+        this.totalPrice = totalPrice;
+        this.customer = customer;
+        this.cartitemList = cartitemList;
+    }
+
+    public Cart(Integer id, int totalProduct, Double totalPrice, Customer customer) {
+        this.id = id;
+        this.totalProduct = totalProduct;
+        this.totalPrice = totalPrice;
+        this.customer = customer;
+    }
 
     public Integer getId() {
         return id;
@@ -63,6 +83,7 @@ public class Cart {
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
 
 
 

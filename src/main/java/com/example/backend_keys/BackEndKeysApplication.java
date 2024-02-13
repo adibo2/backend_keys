@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
-
 public class BackEndKeysApplication {
 
     public static void main(String[] args) {

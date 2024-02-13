@@ -1,10 +1,8 @@
 package com.example.backend_keys.order;
 
 import com.example.backend_keys.cart.Cart;
-import com.example.backend_keys.cart.CartRepo;
+import com.example.backend_keys.cart.CartRepository;
 import com.example.backend_keys.cart.CartService;
-import com.example.backend_keys.cartitems.Cartitem;
-import com.example.backend_keys.customer.Customer;
 import com.example.backend_keys.customer.CustomerRepisotory;
 import com.example.backend_keys.exception.ApiException;
 import com.example.backend_keys.exception.RessourceNotFound;
@@ -13,8 +11,6 @@ import com.example.backend_keys.orderDetail.OrderDetailRepo;
 import com.example.backend_keys.product.Product;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,18 +19,18 @@ public class OrderService implements OrderDao{
     private CustomerRepisotory customerRepisotory;
 
     private OrderDetailRepo orderDetailRepo;
-    private CartRepo cartRepo;
+    private CartRepository cartRepository;
 
     private OrderDtoMapper orderDtoMapper;
 
     private CartService cartService;
 
-    public OrderService(OrderRepo orderRepo,CustomerRepisotory customerRepisotory,CartService cartService,
-                        OrderDetailRepo orderDetailRepo,CartRepo cartRepo,OrderDtoMapper orderDtoMapper) {
+    public OrderService(OrderRepo orderRepo, CustomerRepisotory customerRepisotory, CartService cartService,
+                        OrderDetailRepo orderDetailRepo, CartRepository cartRepository, OrderDtoMapper orderDtoMapper) {
         this.orderRepo = orderRepo;
         this.customerRepisotory=customerRepisotory;
         this.orderDetailRepo=orderDetailRepo;
-        this.cartRepo=cartRepo;
+        this.cartRepository = cartRepository;
         this.orderDtoMapper=orderDtoMapper;
         this.cartService=cartService;
 
@@ -43,7 +39,7 @@ public class OrderService implements OrderDao{
     @Override
     public OrderDto save(Integer cartId,String email) {
         Order order=new Order();
-        Cart cart= cartRepo.findCartByEmailAndCartId(email,cartId);
+        Cart cart= cartRepository.findCartByEmailAndCartId(email,cartId);
         if(cart ==null){
             throw new RessourceNotFound("customer with email %s".formatted(email));
         }

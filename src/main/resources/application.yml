@@ -5,7 +5,7 @@ server:
     include-message: always
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/customer
+    url: jdbc:postgresql://localhost:5432/keys
     username: adib
     password: adibo
   jpa:
@@ -15,7 +15,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: false
+    show-sql: true
   main:
     web-application-type: servlet
   batch:
