@@ -12,5 +12,7 @@ public interface ProductDao {
 
     boolean existProductName(String name);
 
+    ProductDto updateProduct(Integer productId,Product product);
+
 
 }

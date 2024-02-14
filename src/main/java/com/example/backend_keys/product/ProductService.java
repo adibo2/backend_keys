@@ -9,9 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class ProductService {
+public class ProductService implements ProductDao {
 
     private final ProductDao productDao;
     public ProductService(@Qualifier("Product") ProductDao productDao){
@@ -46,4 +47,28 @@ public class ProductService {
         ));
     }
 
+    @Override
+    public List<Product> selectProducts() {
+        return null;
+    }
+
+    @Override
+    public Optional<Product> selectProductByname(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void insertProduct(Product product) {
+
+    }
+
+    @Override
+    public boolean existProductName(String name) {
+        return false;
+    }
+
+    @Override
+    public ProductDto updateProduct(Integer productId, Product product) {
+        return null;
+    }
 }
