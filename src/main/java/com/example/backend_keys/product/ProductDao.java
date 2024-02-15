@@ -1,5 +1,7 @@
 package com.example.backend_keys.product;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +10,7 @@ public interface ProductDao {
 
     Optional<Product> selectProductByname(String name);
 
-    void insertProduct(Product product);
+    ProductDto insertProduct(Product product);
 
     boolean existProductName(String name);
 

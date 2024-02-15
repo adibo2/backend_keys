@@ -5,11 +5,14 @@ import com.example.backend_keys.cartitems.Cartitem;
 import com.example.backend_keys.exception.ApiException;
 import com.example.backend_keys.exception.RessourceNotFound;
 import com.example.backend_keys.product.Product;
+import com.example.backend_keys.product.ProductDto;
+import com.example.backend_keys.product.ProductDtoMapper;
 import com.example.backend_keys.product.ProductRepisotory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService implements CartDao{
@@ -21,14 +24,18 @@ public class CartService implements CartDao{
 
     private final ProductRepisotory productRepisotory;
 
+    private final ProductDtoMapper productDtoMapper;
+
 
     @Autowired
     public CartService(CartRepository cartRepository, CartItemRepo cartitemRepo,
-                       ProductRepisotory productRepisotory, CustomCartDtoMapper customCartDtoMapper) {
+                       ProductRepisotory productRepisotory,ProductDtoMapper productDtoMapper
+                       CustomCartDtoMapper customCartDtoMapper) {
         this.cartRepository = cartRepository;
         this.cartitemRepo = cartitemRepo;
         this.productRepisotory=productRepisotory;
         this.customCartDtoMapper=customCartDtoMapper;
+        this.productDtoMapper=productDtoMapper;
     }
 
     private Cartitem findCartitems(List<Cartitem> cartitems, Integer productId){
@@ -53,7 +60,7 @@ public class CartService implements CartDao{
     }*/
 
     @Override
-    public Cart addtoCart(Integer cartId, Integer productId, int quantity) {
+    public CartDto addtoCart(Integer cartId, Integer productId, int quantity) {
         Cart cart= cartRepository.findById(cartId)
                 .orElseThrow(()->new RessourceNotFound("customer with id %s".formatted(cartId)));
 
@@ -86,12 +93,19 @@ public class CartService implements CartDao{
             cartItems.add(newcartitem);
             cartitemRepo.save(newcartitem);
         }
-        cart.setCartitemList(cartItems);
         int totalitems=totalItems(cart.getCartitemList());
         cart.setTotalPrice(cart.getTotalPrice() + (product.getPrice() * quantity));
         cart.setTotalProduct(totalitems);
+        CartDto cartDto=customCartDtoMapper.apply(cart);
+        List<ProductDto> productDtos =cart.getCartitemList().stream()
+                .map(el->el.getProduct())
+                .map(produit->productDtoMapper.apply(produit))
+                .collect(Collectors.toList());
 
-        return cartRepository.save(cart);
+        CartDto updatedCartDto = new CartDto(cartDto.cartId(), cartDto.totalPrice(), productDtos);
+
+        return updatedCartDto;
+
     }
 
 
@@ -118,6 +132,7 @@ public class CartService implements CartDao{
         }
         cartitem.setQuantity(quantity);
         cart.setTotalPrice(cart.getTotalPrice() + (cart.getTotalPrice() * quantity));
+
 
     }
 

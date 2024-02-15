@@ -5,5 +5,5 @@ import com.example.backend_keys.product.ProductDto;
 
 import java.util.List;
 
-public record CartDto(Integer cartId, double totalPrice, List<Product> products) {
+public record CartDto(Integer cartId, double totalPrice, List<ProductDto> productDtos) {
 }

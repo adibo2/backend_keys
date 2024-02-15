@@ -3,6 +3,7 @@ package com.example.backend_keys.cart;
 import com.example.backend_keys.cartitems.CartItemRepo;
 import com.example.backend_keys.cartitems.Cartitem;
 import com.example.backend_keys.product.Product;
+import com.example.backend_keys.product.ProductDtoMapper;
 import com.example.backend_keys.product.ProductRepisotory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,12 @@ class CartServiceTest {
     private CartService underTest;
 
 
+    private ProductDtoMapper productDtoMapper;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        underTest =new CartService(cartRepository,cartItemRepo,productRepisotory,customCartDtoMapper);
+        underTest =new CartService(cartRepository,cartItemRepo,productRepisotory,customCartDtoMapper,productDtoMapper);
 
 
     }

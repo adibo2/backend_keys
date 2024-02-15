@@ -1,7 +1,10 @@
 package com.example.backend_keys.product;
 
+import org.springframework.stereotype.Component;
+
 import java.util.function.Function;
 
+@Component
 public class ProductDtoMapper implements Function<Product,ProductDto> {
     public ProductDto apply(Product product) {
         return new ProductDto(

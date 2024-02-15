@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CartDao {
 
-    Cart addtoCart(Integer cartId, Integer productId, int quantity);
+    CartDto addtoCart(Integer cartId, Integer productId, int quantity);
 
     String deleteProductFromCart(Integer cartId, Integer productId);
 

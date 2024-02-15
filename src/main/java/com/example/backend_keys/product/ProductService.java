@@ -5,6 +5,8 @@ import com.example.backend_keys.customer.CustomerDao;
 import com.example.backend_keys.customer.CustomerRegistrationRequest;
 import com.example.backend_keys.exception.DuplicateRessource;
 import com.example.backend_keys.exception.RessourceNotFound;
+import com.example.backend_keys.order.OrderDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,16 @@ import java.util.Optional;
 @Service
 public class ProductService implements ProductDao {
 
-    private final ProductDao productDao;
-    public ProductService(@Qualifier("Product") ProductDao productDao){
-        this.productDao=productDao;
-    }
 
+    private final ProductRepisotory productRepisotory;
+
+    private final ProductDtoMapper productDtoMapper;
+    public ProductService(
+                          ProductRepisotory productRepisotory,ProductDtoMapper productDtoMapper){
+        this.productRepisotory=productRepisotory;
+        this.productDtoMapper=productDtoMapper;
+    }
+/*
     public List<Product> getAllProducts(){
         return productDao.selectProducts();
     }
@@ -28,23 +35,16 @@ public class ProductService implements ProductDao {
                 .orElseThrow(()->
                         new RessourceNotFound("product with name %s".formatted(name)));
 
-    }
+    }*/
 
-    public void insertProduct(ProductRegistrationRequest productRegistrationRequest){
-        String name=productRegistrationRequest.name();
-        if(productDao.existProductName(name)){
-            throw new DuplicateRessource("product with name %s already exist".formatted(name));
-        }
-        productDao.insertProduct(new Product(
-                productRegistrationRequest.name(),
-                productRegistrationRequest.slug(),
-                productRegistrationRequest.Image(),
-                productRegistrationRequest.alt(),
-                productRegistrationRequest.meta(),
-                productRegistrationRequest.stock(),
-                productRegistrationRequest.price(),
-                productRegistrationRequest.Discount()
-        ));
+    public ProductDto insertProduct(Product product){
+        product.setImage("dsd");
+        double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
+        Product savedProduct = productRepisotory.save(product);
+        ProductDto productDto=productDtoMapper.apply(savedProduct);
+
+        return productDto;
+
     }
 
     @Override
@@ -57,10 +57,7 @@ public class ProductService implements ProductDao {
         return Optional.empty();
     }
 
-    @Override
-    public void insertProduct(Product product) {
 
-    }
 
     @Override
     public boolean existProductName(String name) {
