@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +30,7 @@ public class CartService implements CartDao{
 
     @Autowired
     public CartService(CartRepository cartRepository, CartItemRepo cartitemRepo,
-                       ProductRepisotory productRepisotory,ProductDtoMapper productDtoMapper
+                       ProductRepisotory productRepisotory,ProductDtoMapper productDtoMapper,
                        CustomCartDtoMapper customCartDtoMapper) {
         this.cartRepository = cartRepository;
         this.cartitemRepo = cartitemRepo;
@@ -110,11 +111,20 @@ public class CartService implements CartDao{
 
 
     @Override
-    public CartDto getCart(Integer id) {
-        return cartRepository.findCartById(id).map(customCartDtoMapper)
-                .orElseThrow(() -> new RessourceNotFound(
-                        "cart with id [%s] not found".formatted(id)
-                ));
+    public CartDto getCart(String email,Integer cartId) {
+        Cart cart=cartRepository.findCartByEmailAndCartId(email,cartId).orElseThrow(()->
+                        new RessourceNotFound(
+                                "cart with id [%s] not found".formatted(cartId)
+                        ));
+        CartDto cartDto=customCartDtoMapper.apply(cart);
+        List<ProductDto> productDtos =cart.getCartitemList().stream()
+                .map(el->el.getProduct())
+                .map(produit->productDtoMapper.apply(produit))
+                .collect(Collectors.toList());
+
+        CartDto SelectedCartDto = new CartDto(cartDto.cartId(), cartDto.totalPrice(), productDtos);
+        return SelectedCartDto;
+
     }
 
     @Override
@@ -132,7 +142,6 @@ public class CartService implements CartDao{
         }
         cartitem.setQuantity(quantity);
         cart.setTotalPrice(cart.getTotalPrice() + (cart.getTotalPrice() * quantity));
-
 
     }
 
@@ -153,7 +162,7 @@ public class CartService implements CartDao{
         cart.setTotalPrice(cart.getTotalPrice() - (cartItem.getProductPrice() * cartItem.getQuantity()));
         cart.setTotalProduct(cart.getTotalProduct() - cartItem.getQuantity());
 
-        Product product = cartItem.getProduct();
+        //Product product = cartItem.getProduct();
         cartitemRepo.deleteCartItemByProductIdAndCartId(cartId,productId);
         return "Product " + cartItem.getProduct().getName() + " removed from the cart !!!";
 

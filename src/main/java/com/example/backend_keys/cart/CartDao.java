@@ -13,7 +13,7 @@ public interface CartDao {
 
     String deleteProductFromCart(Integer cartId, Integer productId);
 
-    CartDto getCart(Integer id);
+    CartDto getCart(String email,Integer cartId);
 
     void updateProductInCarts(Integer cartId, Integer productId,int quantity);
 

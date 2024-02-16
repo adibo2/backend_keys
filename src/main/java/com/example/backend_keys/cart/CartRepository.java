@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface CartRepository extends CrudRepository<Cart,Integer> {
 
     @Query("select c from cart c where c.customer.email = ?1 and c.id = ?2")
-    public Cart findCartByEmailAndCartId(String email,Integer cartId);
+    Optional<Cart>  findCartByEmailAndCartId(String email,Integer cartId);
 
-    public Optional<Cart> findCartById(Integer id);
+     Optional<Cart> findCartById(Integer id);
 
 
 }

@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-
 //sprin alreaty take of this class it create new instance it named beans ths controller is
 // beans and we can acces through our app
 @RequestMapping("api/v1/customer")
