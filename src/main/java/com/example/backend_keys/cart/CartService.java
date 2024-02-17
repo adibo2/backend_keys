@@ -128,20 +128,44 @@ public class CartService implements CartDao{
     }
 
     @Override
-    public void updateProductInCarts(Integer cartId, Integer productId,int quantity) {
+    public CartDto updateProductInCarts(Integer cartId, Integer productId,int quantity) {
         Cart cart= cartRepository.findById(cartId).orElseThrow(()->(
                 new RessourceNotFound( "cart with id [%s] not found".formatted(cartId))
                 ));
         Product product=productRepisotory.findById(productId)
                 .orElseThrow(()->new RessourceNotFound("customer with id %s".formatted(productId)));
 
+
+        if (product.getStock() == 0) {
+            throw new ApiException("Product : " + product.getName() + " is out of Stock .");
+        }
+        if(product.getStock() < quantity){
+            throw new ApiException("Please, make an order of the : " +
+                    product.getName() + " less than or equal to the quantity ."+ product.getStock() + ".");
+
+        }
+
         Cartitem cartitem=cartitemRepo.findCartItemByProductIdAndCartId(cartId,productId);
 
-        if(cartitem == null){
-            throw new ApiException("Product " + product.getName() + " not available in the cart!!!");
+        if (cartitem == null) {
+            throw new ApiException("Product " +
+                    product.getName() + " not available in the cart!!!");
         }
+        double cartPrice = cart.getTotalPrice() - (cartitem.getProductPrice() * cartitem.getQuantity());
+        cartitem.setProductPrice(product.getPrice());
         cartitem.setQuantity(quantity);
-        cart.setTotalPrice(cart.getTotalPrice() + (cart.getTotalPrice() * quantity));
+        cartitem.setDiscount(product.getDiscount());
+        cart.setTotalPrice(cartPrice + (cartitem.getProductPrice() * quantity));
+        cartitem=cartitemRepo.save(cartitem);
+
+        CartDto cartDto=customCartDtoMapper.apply(cart);
+        List<ProductDto> productDtos =cart.getCartitemList().stream()
+                .map(el->el.getProduct())
+                .map(produit->productDtoMapper.apply(produit))
+                .collect(Collectors.toList());
+
+        CartDto SelectedCartDto = new CartDto(cartDto.cartId(), cartDto.totalPrice(), productDtos);
+        return SelectedCartDto;
 
     }
 

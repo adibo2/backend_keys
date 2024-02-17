@@ -15,7 +15,7 @@ public interface CartDao {
 
     CartDto getCart(String email,Integer cartId);
 
-    void updateProductInCarts(Integer cartId, Integer productId,int quantity);
+    CartDto updateProductInCarts(Integer cartId, Integer productId,int quantity);
 
 
 
