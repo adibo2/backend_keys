@@ -162,7 +162,7 @@ public class CartService implements CartDao{
         List<ProductDto> productDtos =cart.getCartitemList().stream()
                 .map(el->el.getProduct())
                 .map(produit->productDtoMapper.apply(produit))
-                .collect(Collectors.toList());
+                .toList();
 
         CartDto SelectedCartDto = new CartDto(cartDto.cartId(), cartDto.totalPrice(), productDtos);
         return SelectedCartDto;

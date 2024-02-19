@@ -2,6 +2,7 @@ package com.example.backend_keys.product;
 
 import com.example.backend_keys.cart.Cart;
 import com.example.backend_keys.cartitems.Cartitem;
+import com.example.backend_keys.category.Category;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -57,6 +58,12 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Cartitem> cartitems;
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="category_id",referencedColumnName = "id",foreignKey = @ForeignKey(
+            name = "category_id_fk"))
+    private Category category;
 
 
 
