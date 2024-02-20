@@ -1,13 +1,9 @@
 package com.example.backend_keys.product;
 
-import com.example.backend_keys.customer.Customer;
-import com.example.backend_keys.customer.CustomerDao;
-import com.example.backend_keys.customer.CustomerRegistrationRequest;
-import com.example.backend_keys.exception.DuplicateRessource;
+import com.example.backend_keys.cart.Cart;
+import com.example.backend_keys.cart.CartRepository;
+import com.example.backend_keys.exception.ApiException;
 import com.example.backend_keys.exception.RessourceNotFound;
-import com.example.backend_keys.order.OrderDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +14,13 @@ public class ProductService implements ProductDao {
 
 
     private final ProductRepisotory productRepisotory;
+    private final CartRepository cartRepository;
 
     private final ProductDtoMapper productDtoMapper;
     public ProductService(
-                          ProductRepisotory productRepisotory,ProductDtoMapper productDtoMapper){
+            ProductRepisotory productRepisotory, CartRepository cartRepository, ProductDtoMapper productDtoMapper){
         this.productRepisotory=productRepisotory;
+        this.cartRepository = cartRepository;
         this.productDtoMapper=productDtoMapper;
     }
 /*
@@ -66,6 +64,21 @@ public class ProductService implements ProductDao {
 
     @Override
     public ProductDto updateProduct(Integer productId, Product product) {
+        Product productfromDB= productRepisotory.findById(productId).orElseThrow(()->{
+           return new RessourceNotFound("Product : " + product.getName() + " is Not found .");
+        });
+        if (productfromDB == null) {
+            throw new ApiException("Product : " + product.getName() + " not here .");
+        }
+        product.setImage(productfromDB.getImage());
+
+        double priceAfterdiscount = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
+
+        Product savedProduct = productRepisotory.save(product);
+
+
+
+
         return null;
     }
 }
