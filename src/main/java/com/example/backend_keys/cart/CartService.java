@@ -128,7 +128,7 @@ public class CartService implements CartDao{
     }
 
     @Override
-    public CartDto updateProductInCarts(Integer cartId, Integer productId,int quantity) {
+    public CartDto updateProductQuantityInCarts(Integer cartId, Integer productId,int quantity) {
         Cart cart= cartRepository.findById(cartId).orElseThrow(()->(
                 new RessourceNotFound( "cart with id [%s] not found".formatted(cartId))
                 ));
@@ -169,6 +169,26 @@ public class CartService implements CartDao{
 
     }
 
+    @Override
+    public void updateProductsInCart(Integer cartId, Integer productId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RessourceNotFound("customer with id %s".formatted(cartId)));
+
+        Product product = productRepisotory.findById(productId)
+                .orElseThrow(() -> new RessourceNotFound("product with id %s".formatted(productId));
+
+        Cartitem cartItem = cartitemRepo.findCartItemByProductIdAndCartId(cartId, productId);
+
+        if (cartItem == null) {
+            throw new ApiException("Product " + product.getName() + " not available in the cart!!!");
+        }
+
+        double cartPrice = cart.getTotalPrice() - (cartItem.getProductPrice() * cartItem.getQuantity());
+
+        cart.setTotalPrice(cartPrice + (cartItem.getProductPrice() * cartItem.getQuantity()));
+
+        cartItem = cartitemRepo.save(cartItem);
+    }
 
 
     @Override

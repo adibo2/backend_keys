@@ -1,7 +1,6 @@
 package com.example.backend_keys.product;
 
-import com.example.backend_keys.cart.Cart;
-import com.example.backend_keys.cart.CartRepository;
+import com.example.backend_keys.cart.*;
 import com.example.backend_keys.exception.ApiException;
 import com.example.backend_keys.exception.RessourceNotFound;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,18 @@ public class ProductService implements ProductDao {
     private final CartRepository cartRepository;
 
     private final ProductDtoMapper productDtoMapper;
+
+    private final CustomCartDtoMapper customCartDtoMapper;
+
+    private final CartService cartService;
+
     public ProductService(
-            ProductRepisotory productRepisotory, CartRepository cartRepository, ProductDtoMapper productDtoMapper){
+            ProductRepisotory productRepisotory, CartRepository cartRepository, ProductDtoMapper productDtoMapper, CustomCartDtoMapper customCartDtoMapper, CartService cartService){
         this.productRepisotory=productRepisotory;
         this.cartRepository = cartRepository;
         this.productDtoMapper=productDtoMapper;
+        this.customCartDtoMapper = customCartDtoMapper;
+        this.cartService = cartService;
     }
 /*
     public List<Product> getAllProducts(){
@@ -76,9 +82,21 @@ public class ProductService implements ProductDao {
 
         Product savedProduct = productRepisotory.save(product);
 
+        List<Cart> carts=cartRepository.findCartByProductId(productId);
+        List<CartDto> cartDtos=carts.stream()
+                .map(cart -> {
+                    CartDto cartDto=customCartDtoMapper.apply(cart);
+                    List<ProductDto> productDtos=cart.getCartitemList().stream()
+                            .map(pr->pr.getProduct())
+                            .map(el->productDtoMapper.apply(el)).toList();
+                    CartDto updateCartDto = new CartDto(cartDto.cartId(), cartDto.totalPrice(), productDtos);
+                    return updateCartDto;
+
+                }).toList();
+        cartDtos.forEach(cart->cartService.updateProductsInCart(cart.cartId(),productId));
 
 
 
-        return null;
+        return productDtoMapper.apply(savedProduct);
     }
 }
