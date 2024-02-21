@@ -8,8 +8,13 @@ public interface OrderDao {
     OrderDto save(Integer cartId,String email);
 
 
+
+
     void cancelOrder(Integer Id);
 
 
     OrderDto getOrder(String email,Integer orderId);
+
+    OrderDto updateOrder(String email, Integer orderId, String orderStatus);
+
 }

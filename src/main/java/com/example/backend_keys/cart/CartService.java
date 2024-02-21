@@ -175,7 +175,7 @@ public class CartService implements CartDao{
                 .orElseThrow(() -> new RessourceNotFound("customer with id %s".formatted(cartId)));
 
         Product product = productRepisotory.findById(productId)
-                .orElseThrow(() -> new RessourceNotFound("product with id %s".formatted(productId));
+                .orElseThrow(() -> new RessourceNotFound("product with id %s".formatted(productId)));
 
         Cartitem cartItem = cartitemRepo.findCartItemByProductIdAndCartId(cartId, productId);
 

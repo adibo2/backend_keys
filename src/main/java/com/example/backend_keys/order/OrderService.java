@@ -39,10 +39,10 @@ public class OrderService implements OrderDao{
     @Override
     public OrderDto save(Integer cartId,String email) {
         Order order=new Order();
-        Cart cart= cartRepository.findCartByEmailAndCartId(email,cartId);
-        if(cart ==null){
-            throw new RessourceNotFound("customer with email %s".formatted(email));
-        }
+        Cart cart= cartRepository.findCartByEmailAndCartId(email,cartId).orElseThrow(()->{
+           return new RessourceNotFound("customer with email %s".formatted(email));
+        });
+
         order.setEmail(email);
         order.setOrderDate(LocalDateTime.now());
         order.setTotalPrice(cart.getTotalPrice());
@@ -91,13 +91,23 @@ public class OrderService implements OrderDao{
 
     @Override
     public OrderDto getOrder(String email, Integer orderId) {
-        return null;
+        Order order=orderRepo.findOrderByEmailAndId(email,orderId);
+        if(order == null){
+            throw new RessourceNotFound("customer with email %s %s not found".formatted(email,orderId));
+        }
+        return orderDtoMapper.apply(order);
     }
 
+    @Override
+    public OrderDto updateOrder(String email, Integer orderId, String orderStatus) {
+        Order order=orderRepo.findOrderByEmailAndId(email,orderId);
+        if(order == null){
+            throw new RessourceNotFound("customer with email %s %s not found".formatted(email,orderId));
+        }
+        order.setOrderStatus(orderStatus);
 
-
-
-
+        return orderDtoMapper.apply(order);
+    }
 
 
 }
