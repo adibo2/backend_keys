@@ -3,6 +3,10 @@ package com.example.backend_keys.product;
 import com.example.backend_keys.cart.*;
 import com.example.backend_keys.exception.ApiException;
 import com.example.backend_keys.exception.RessourceNotFound;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -98,5 +102,29 @@ public class ProductService implements ProductDao {
 
 
         return productDtoMapper.apply(savedProduct);
+    }
+
+    @Override
+    public ProductResponse searchProductByKeyWord(String query, Integer pageNumber, Integer pageSize,
+                                                  String sortBy, String sortOrder) {
+        Sort sortByAndOrder=sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageDetails= PageRequest.of(pageNumber,pageSize,sortByAndOrder);
+        Page<Product> productPage=productRepisotory.findByNameLike(query,pageDetails);
+        List<Product> products=productPage.getContent();
+        if (products.size() == 0) {
+            throw new ApiException("Product not found with :" + query );
+
+        }
+        List<ProductDto> productDtos=products.stream().map(el->productDtoMapper.apply(el)).toList();
+        ProductResponse productResponse=new ProductResponse();
+        productResponse.setProductDtos(productDtos);
+        productResponse.setPageNumber(pageNumber);
+        productResponse.setLastPage(productPage.isLast());
+        productResponse.setPageSize(pageSize);
+        productResponse.setTotalElements(productResponse.getTotalElements());
+        productResponse.setTotalPages(productResponse.getTotalPages());
+        return productResponse;
     }
 }

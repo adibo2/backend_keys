@@ -1,5 +1,7 @@
 package com.example.backend_keys.product;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,4 +20,6 @@ public interface ProductRepisotory extends JpaRepository<Product,Integer> {
     @Query(value = "select p from product p order by p.cost_price asc limit 9",
             nativeQuery = true)
     List<Product> filterLowerProducts();
+
+    Page<Product> findByNameLike(String query, Pageable pageDetails);
 }

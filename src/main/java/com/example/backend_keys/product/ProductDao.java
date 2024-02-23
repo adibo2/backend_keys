@@ -16,5 +16,8 @@ public interface ProductDao {
 
     ProductDto updateProduct(Integer productId,Product product);
 
+    ProductResponse searchProductByKeyWord(String query,Integer pageNumber,Integer pageSize,
+                                           String sortBy,String sortOrder);
+
 
 }
