@@ -6,5 +6,6 @@ public interface CategortDao {
     CategoryDto updateCategory(Category category, Integer categoryId);
 
     String deleteCategory(Integer categoryId);
+    CategoryResponse getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
 }
